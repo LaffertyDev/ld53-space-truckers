@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqwbw6ff8whb"]
+
+[ext_resource type="Texture2D" uid="uid://bpokcoffe7f03" path="res://src/game/stations/station.png" id="1_dix8o"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4snth"]
+radius = 356.0
+height = 712.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2xefy"]
+radius = 72.0
+
+[node name="station" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(4, 4)
+texture = ExtResource("1_dix8o")
+
+[node name="main_collision" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="main_collision"]
+shape = SubResource("CapsuleShape2D_4snth")
+
+[node name="LandingPad_Right" type="Area2D" parent="."]
+position = Vector2(448, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPad_Right"]
+shape = SubResource("CircleShape2D_2xefy")
+
+[node name="LandingPad_Top" type="Area2D" parent="."]
+position = Vector2(0, -448)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPad_Top"]
+shape = SubResource("CircleShape2D_2xefy")
+metadata/_edit_lock_ = true
+
+[node name="LandingPad_Bottom" type="Area2D" parent="."]
+position = Vector2(0, 448)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPad_Bottom"]
+shape = SubResource("CircleShape2D_2xefy")
+
+[node name="LandingPad_Left" type="Area2D" parent="."]
+position = Vector2(-448, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPad_Left"]
+shape = SubResource("CircleShape2D_2xefy")

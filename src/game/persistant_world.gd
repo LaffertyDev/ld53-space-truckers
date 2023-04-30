@@ -7,13 +7,47 @@ const networked_port = 4242
 const actual_server_addr = "wss://lafferty.dev:%s" % networked_port
 
 func _ready():
-	if DisplayServer.get_name() == "headless":
-		start_server()
+	if OS.is_debug_build():
+		if DisplayServer.get_name() == "headless":
+			start_server_direct()
+		else:
+			start_client_direct()
 	else:
-		start_client()
+		if DisplayServer.get_name() == "headless":
+			start_server()
+		else:
+			start_client()
+		
+func start_server_direct():
+	print("Starting Server!")
+	var peer = ENetMultiplayerPeer.new()
+	multiplayer.connected_to_server.connect(self._on_connected_to_server)
+	multiplayer.server_disconnected.connect(self._on_server_disconnect)
+	multiplayer.peer_connected.connect(self.create_player)
+	multiplayer.peer_disconnected.connect(self.destroy_player)
+	peer.create_server(networked_port)
+	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		OS.alert("Failed to start multiplayer server.")
+		return	
+	multiplayer.set_multiplayer_peer(peer)
+	
+	print("Server Started Successfully")
+func start_client_direct():
+	print("Starting Client in WS mode!!")
+	var peer = ENetMultiplayerPeer.new()
+	peer.create_client("localhost", networked_port)
+	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		OS.alert("Failed to start client!")
+		return	
+	multiplayer.set_multiplayer_peer(peer)
+	multiplayer.connected_to_server.connect(self._on_connected_to_server)
+	multiplayer.server_disconnected.connect(self._on_server_disconnect)
+	multiplayer.peer_connected.connect(self._on_client_peer_connected)
+	print("Client Started Successfully")
+	
 
 func start_server():
-	print("Starting Server!")
+	print("Starting Server in WS mode!")
 	var peer = WebSocketMultiplayerPeer.new()
 	multiplayer.connected_to_server.connect(self._on_connected_to_server)
 	multiplayer.server_disconnected.connect(self._on_server_disconnect)
@@ -31,7 +65,7 @@ func start_server():
 	print("Server Started Successfully")
 		
 func start_client():
-	print("Starting Client!")
+	print("Starting Client in WS mode!!")
 	var peer = WebSocketMultiplayerPeer.new()
 	var client_trusted_cas = load("res://fullchain.crt")
 	var client_tls_options = TLSOptions.client(client_trusted_cas)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c23qm6uk0e3fw"]
+[gd_scene load_steps=4 format=3 uid="uid://c23qm6uk0e3fw"]
 
 [ext_resource type="Script" path="res://src/game/persistant_world.gd" id="1_hq46o"]
 [ext_resource type="Texture2D" uid="uid://b2m2o4ld48a32" path="res://icon.svg" id="2_dv08l"]
+[ext_resource type="PackedScene" uid="uid://dqwbw6ff8whb" path="res://src/game/stations/station.tscn" id="3_i2vhq"]
 
 [node name="persistant_world" type="Node2D"]
 script = ExtResource("1_hq46o")
@@ -14,8 +15,8 @@ _spawnable_scenes = PackedStringArray("res://src/game/player/player.tscn")
 spawn_path = NodePath("../networked_player_list")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(308, 287)
-scale = Vector2(6.85938, 6.55469)
+position = Vector2(-252, 371.25)
+scale = Vector2(2.45313, 2.34766)
 texture = ExtResource("2_dv08l")
 
 [node name="player_ships_list" type="Node" parent="."]
@@ -24,6 +25,9 @@ unique_name_in_owner = true
 [node name="spawner_ship" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/game/ships/ship.tscn")
 spawn_path = NodePath("../player_ships_list")
+
+[node name="station" parent="." instance=ExtResource("3_i2vhq")]
+position = Vector2(-177, 145)
 
 [connection signal="despawned" from="spawner_player" to="." method="_on_multiplayer_spawner_despawned"]
 [connection signal="spawned" from="spawner_player" to="." method="_on_multiplayer_spawner_spawned"]
