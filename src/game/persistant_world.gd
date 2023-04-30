@@ -4,7 +4,7 @@ const player_scene = preload("res://src/game/player/player.tscn")
 const ship_scene = preload("res://src/game/ships/ship.tscn")
 
 const networked_port = 4242
-const actual_server_addr = "159.223.132.235"
+const actual_server_addr = "wss://lafferty.dev:%s" % networked_port
 
 func _ready():
 	if DisplayServer.get_name() == "headless":
@@ -14,12 +14,15 @@ func _ready():
 
 func start_server():
 	print("Starting Server!")
-	var peer = ENetMultiplayerPeer.new()
+	var peer = WebSocketMultiplayerPeer.new()
 	multiplayer.connected_to_server.connect(self._on_connected_to_server)
 	multiplayer.server_disconnected.connect(self._on_server_disconnect)
 	multiplayer.peer_connected.connect(self.create_player)
 	multiplayer.peer_disconnected.connect(self.destroy_player)
-	peer.create_server(networked_port)
+	var server_certs = load("res://fullchain.crt")
+	var server_key = load("res://key.key")
+	var server_tls_options = TLSOptions.server(server_key, server_certs)
+	peer.create_server(networked_port, "*", server_tls_options)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start multiplayer server.")
 		return	
@@ -29,8 +32,10 @@ func start_server():
 		
 func start_client():
 	print("Starting Client!")
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_client(actual_server_addr, networked_port)
+	var peer = WebSocketMultiplayerPeer.new()
+	var client_trusted_cas = load("res://fullchain.crt")
+	var client_tls_options = TLSOptions.client(client_trusted_cas)
+	peer.create_client(actual_server_addr, client_tls_options)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start client!")
 		return	
