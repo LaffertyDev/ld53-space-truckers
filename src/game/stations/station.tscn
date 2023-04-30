@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dqwbw6ff8whb"]
+[gd_scene load_steps=5 format=3 uid="uid://dqwbw6ff8whb"]
 
 [ext_resource type="Texture2D" uid="uid://bpokcoffe7f03" path="res://src/game/stations/station.png" id="1_dix8o"]
+[ext_resource type="Script" path="res://src/game/stations/station.gd" id="1_pk7mc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4snth"]
 radius = 356.0
@@ -10,6 +11,8 @@ height = 712.0
 radius = 72.0
 
 [node name="station" type="Node2D"]
+script = ExtResource("1_pk7mc")
+station_uuid = "alpha"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(4, 4)
@@ -45,3 +48,5 @@ position = Vector2(-448, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPad_Left"]
 shape = SubResource("CircleShape2D_2xefy")
+
+[connection signal="body_entered" from="LandingPad_Right" to="." method="_on_landing_pad_right_body_entered"]

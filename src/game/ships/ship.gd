@@ -1,10 +1,11 @@
 extends CharacterBody2D
 
-var player_name: String
 const MAX_SPEED = 1500.0
 const ACCELERATION_PER_SECOND = 600 #980 is default gravity
 const SHIP_TRANSLATION_SPEED = 400
 const CORRECTION_SPEED = 300
+
+var destination_vector: Vector2 = Vector2(0,0)
 
 @export var my_velocity = self.velocity
 
@@ -22,6 +23,9 @@ func _ready():
 	add_to_group("ships")
 	add_to_group("nodes_by_%s" % player_mp_id)
 	pass
+	
+func update_destination(new_destination: Vector2):
+	destination_vector = new_destination
 
 func _physics_process(_delta):
 	velocity = my_velocity
@@ -41,9 +45,9 @@ func _physics_process(_delta):
 	elif %ShipInputSync.is_thrusting_backward:
 		thrust_acceleration_vector *= -1
 	else:
+		# reduce thrust speed
 		thrust_acceleration_vector *= 0
 	
-	var translation_acceleration_normalized = SHIP_TRANSLATION_SPEED * _delta
 	var translation_acceleration_vector = Vector2(SHIP_TRANSLATION_SPEED * _delta * cos(rotation - 1.57), SHIP_TRANSLATION_SPEED * _delta * sin(rotation - 1.57))
 	if %ShipInputSync.is_translating_left:
 		translation_acceleration_vector *= 1
@@ -55,17 +59,17 @@ func _physics_process(_delta):
 		translation_acceleration_vector.y = 0
 	
 	if thrust_acceleration_vector.is_zero_approx():
-		var correction_speed_normalized = velocity.abs().length() * 0.75 * _delta
+		var correction_speed_normalized = velocity.abs().length() * 1.5 * _delta
 		var angle_to_velocity_degrees = rad_to_deg(angle_to_velocity)
-		if angle_to_velocity_degrees > 0 && angle_to_velocity_degrees < 90:
+		if angle_to_velocity_degrees > 2 && angle_to_velocity_degrees < 90:
 			thrust_acceleration_vector = facing_vector.orthogonal() * correction_speed_normalized
-		elif angle_to_velocity_degrees < 0 && angle_to_velocity_degrees > -90:
+		elif angle_to_velocity_degrees < -2 && angle_to_velocity_degrees > -90:
 			thrust_acceleration_vector = facing_vector.orthogonal() * correction_speed_normalized * -1
-		elif angle_to_velocity_degrees < -90 || angle_to_velocity_degrees > 90:
+		elif angle_to_velocity_degrees <= -90 || angle_to_velocity_degrees >= 90:
 			thrust_acceleration_vector = velocity.normalized() * correction_speed_normalized * -1
 		else:
 			# we're dead-on, so just slow by an amount
-			thrust_acceleration_vector = velocity * -1 * _delta
+			thrust_acceleration_vector = velocity * -1.5 * _delta
 			
 		if thrust_acceleration_vector.length() < 0.1:
 			thrust_acceleration_vector *= 0
@@ -80,6 +84,10 @@ func _physics_process(_delta):
 	%acceleration_vector.rotation = acceleration_total.angle() + 1.57 - rotation
 	%acceleration_vector.position = acceleration_total.normalized().rotated(-rotation) * 120
 	
+	var angle_to_destination_from_x = self.position.angle_to_point(destination_vector)
+	%destination_vector.rotation = angle_to_destination_from_x - rotation + 1.57
+	%destination_vector.position = Vector2(1, 0).rotated(%destination_vector.rotation - 1.57) * 210
+
 	# min and max
 	if velocity.is_zero_approx():
 		velocity.x = 0

@@ -80,3 +80,10 @@ position = Vector2(120, 2.08165e-12)
 rotation = 1.5708
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_0jupo")
+
+[node name="destination_vector" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(210, 2.08165e-12)
+rotation = 1.5708
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_0jupo")

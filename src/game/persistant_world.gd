@@ -87,10 +87,13 @@ func create_player(id):
 	ship.name = str(id)
 	%player_ships_list.add_child(ship, true)
 	
+	var station = get_tree().get_nodes_in_group("stations")[0]
+	
 	var p = player_scene.instantiate()
 	p.player_mp_id = id
-	p.player_name = "Player %d" % id
 	p.name = str(id)
+	p.my_ship = ship
+	p.current_delivery_destination = station.get_random_delivery_destination(station.station_uuid)
 	%networked_player_list.add_child(p, true)
 
 func destroy_player(id):

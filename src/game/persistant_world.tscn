@@ -29,5 +29,9 @@ spawn_path = NodePath("../player_ships_list")
 [node name="station" parent="." instance=ExtResource("3_i2vhq")]
 position = Vector2(-177, 145)
 
+[node name="station2" parent="." instance=ExtResource("3_i2vhq")]
+position = Vector2(1198, 851)
+station_uuid = "beta"
+
 [connection signal="despawned" from="spawner_player" to="." method="_on_multiplayer_spawner_despawned"]
 [connection signal="spawned" from="spawner_player" to="." method="_on_multiplayer_spawner_spawned"]
