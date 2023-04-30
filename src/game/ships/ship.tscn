@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://d2ev1xh0atiji"]
+
+[ext_resource type="Texture2D" uid="uid://b2m2o4ld48a32" path="res://icon.svg" id="1_0jupo"]
+[ext_resource type="Script" path="res://src/game/ships/ship.gd" id="1_mb68k"]
+[ext_resource type="Script" path="res://src/game/ships/ship_input_sync.gd" id="3_fjrh3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hbsrq"]
+size = Vector2(126, 130)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_516l3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = false
+properties/0/sync = true
+properties/1/path = NodePath(".:my_velocity")
+properties/1/spawn = false
+properties/1/sync = true
+properties/2/path = NodePath(".:player_mp_id")
+properties/2/spawn = true
+properties/2/sync = true
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kwpk7"]
+properties/0/path = NodePath(".:direction")
+properties/0/spawn = true
+properties/0/sync = true
+
+[node name="ship" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_mb68k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.745098, 1, 0.411765, 1)
+texture = ExtResource("1_0jupo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -1)
+shape = SubResource("RectangleShape2D_hbsrq")
+
+[node name="ServerSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_516l3")
+
+[node name="ShipInputSync" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_kwpk7")
+script = ExtResource("3_fjrh3")

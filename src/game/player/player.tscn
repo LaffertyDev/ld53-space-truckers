@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://5kunklguuuuq"]
+
+[ext_resource type="Script" path="res://src/game/player/player.gd" id="1_mt558"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_c1tfw"]
+properties/0/path = NodePath(".:player_mp_id")
+properties/0/spawn = true
+properties/0/sync = false
+
+[node name="player" type="Node2D"]
+script = ExtResource("1_mt558")
+
+[node name="player_camera" type="Camera2D" parent="."]
+unique_name_in_owner = true
+enabled = false
+
+[node name="ServerSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_c1tfw")
