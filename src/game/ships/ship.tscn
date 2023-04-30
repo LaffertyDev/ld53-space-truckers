@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2ev1xh0atiji"]
+[gd_scene load_steps=8 format=3 uid="uid://d2ev1xh0atiji"]
 
+[ext_resource type="Texture2D" uid="uid://b2m2o4ld48a32" path="res://icon.svg" id="1_0jupo"]
 [ext_resource type="Script" path="res://src/game/ships/ship.gd" id="1_mb68k"]
 [ext_resource type="Texture2D" uid="uid://bvt3fuk6gxmah" path="res://src/game/ships/player_ship.png" id="2_enwnk"]
 [ext_resource type="Script" path="res://src/game/ships/ship_input_sync.gd" id="3_fjrh3"]
@@ -31,6 +32,12 @@ properties/2/sync = true
 properties/3/path = NodePath(".:all_stop")
 properties/3/spawn = true
 properties/3/sync = true
+properties/4/path = NodePath(".:is_translating_left")
+properties/4/spawn = true
+properties/4/sync = true
+properties/5/path = NodePath(".:is_translating_right")
+properties/5/spawn = true
+properties/5/sync = true
 
 [node name="ship" type="CharacterBody2D"]
 motion_mode = 1
@@ -59,3 +66,17 @@ offset_left = -61.0
 offset_top = 44.0
 offset_right = 63.0
 offset_bottom = 93.0
+
+[node name="velocity_vector" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(180, 2.08165e-12)
+rotation = 1.5708
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_0jupo")
+
+[node name="acceleration_vector" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(120, 2.08165e-12)
+rotation = 1.5708
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_0jupo")

@@ -2,6 +2,8 @@ extends MultiplayerSynchronizer
 
 @export var is_thrusting_forward := false
 @export var is_thrusting_backward := false
+@export var is_translating_left := false
+@export var is_translating_right := false
 @export var ship_rotation_degrees := 0
 @export var all_stop := false
 
@@ -26,6 +28,9 @@ func _process(_delta):
 		is_thrusting_forward = false
 		is_thrusting_backward = false
 		# all_stop is sticky until you accelerate
+		
+	is_translating_left = Input.is_action_pressed("ship_translate_left")
+	is_translating_right = Input.is_action_pressed("ship_translate_right")
 	
 	if (Input.is_action_pressed("rotate_clockwise")):
 		ship_rotation_degrees = (ship_rotation_degrees + 1) % 360
