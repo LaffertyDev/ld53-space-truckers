@@ -23,7 +23,7 @@ There's some fun movement behavior. I wanted to get a slight neutoniun feel but 
 
 It was fun seeing a lot of the reasons why modern game networking is setup how it is. There's a lot to learn!
 * My game has significant ghosting problems, with "jittery" sprites
-* To fix this, I would need to implement delayed rendering with 
+* To fix this, I would need to implement delayed rendering with lerping positions and animations
 
 ## Releasing / Building
 
@@ -32,3 +32,5 @@ It was fun seeing a lot of the reasons why modern game networking is setup how i
 * Running `nu deploy.nu` will run a deploy, `scp` the files over `ssh` to my server
 * I did not setup auto-running executables, so run the binary with `--headless` param to start the server
 * Running in debug mode locally will use low-level networking features
+
+The server is running via a `systemd` task. If I need to maintain it in the future, I'm using the `simple` script with a `/bin/bash` executable.
